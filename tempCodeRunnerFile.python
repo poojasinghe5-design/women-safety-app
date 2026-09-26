@@ -1,0 +1,12 @@
+boyfriend = "Mohit"
+anger = True
+
+while anger:
+    print("Sorry")
+    print("I love you ")
+    print("Please maan jao ")
+    
+    if boyfriend == "Mohit":
+        anger = False
+
+print("BETU")

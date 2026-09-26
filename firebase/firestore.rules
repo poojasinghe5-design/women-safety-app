@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users can only read/write their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // SOS alerts: user can create/read own; contacts can read if shared
+    match /sos_alerts/{alertId} {
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // Live location: user writes, authorized contacts read
+    match /live_locations/{userId} {
+      allow write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null;
+    }
+
+    // Location shares
+    match /location_shares/{shareId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Area reports: authenticated users can create and read
+    match /area_reports/{reportId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+    }
+  }
+}
